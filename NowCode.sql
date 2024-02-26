@@ -13,3 +13,5 @@ from employees a
 where b.salary in (select max(salary) max_ssecondary_salaryalary_2
                    from salaries
                    where salary != (select max(salary) max_salary from salaries));
+
+-- 206
