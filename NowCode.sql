@@ -57,3 +57,5 @@ from employees e
          left join salaries s
                    on e.emp_no = s.emp_no
 where e.emp_no not in (select emp_no from dept_manager);
+
+-- 217
