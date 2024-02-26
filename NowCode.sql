@@ -52,10 +52,16 @@ select de.dept_no, e.emp_no, salary
 from employees e
          left join dept_emp de
                    on e.emp_no = de.emp_no
-         -- left join dept_manager dm
-                   -- on de.dept_no = dm.dept_no
+    -- left join dept_manager dm
+    -- on de.dept_no = dm.dept_no
          left join salaries s
                    on e.emp_no = s.emp_no
 where e.emp_no not in (select emp_no from dept_manager);
 
 -- 217
+select emp_no, salary, rank() over (order by salary desc ) as value
+from salaries;
+    -- 如果salary相同，再按照emp_no升序排列
+select emp_no, salary, dense_rank() over (order by salary desc ) as value
+from salaries
+order by salary desc ,emp_no asc ;
