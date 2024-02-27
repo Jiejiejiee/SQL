@@ -64,4 +64,4 @@ from salaries;
     -- 如果salary相同，再按照emp_no升序排列
 select emp_no, salary, dense_rank() over (order by salary desc ) as value
 from salaries
-order by salary desc ,emp_no asc ;
+order by salary desc ,emp_no;
