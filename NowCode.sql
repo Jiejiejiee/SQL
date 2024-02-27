@@ -61,7 +61,32 @@ where e.emp_no not in (select emp_no from dept_manager);
 -- 217
 select emp_no, salary, rank() over (order by salary desc ) as value
 from salaries;
-    -- 如果salary相同，再按照emp_no升序排列
+-- 如果salary相同，再按照emp_no升序排列
 select emp_no, salary, dense_rank() over (order by salary desc ) as value
 from salaries
-order by salary desc ,emp_no;
+order by salary desc, emp_no;
+
+-- 215
+select s1.emp_no, (s2.salary - s1.salary) as growth
+from salaries s1
+         left join salaries s2
+                   on s1.to_date = s2.from_date
+         left join employees
+                   on s1.emp_no = employees.emp_no
+where s2.emp_no is not null
+  and (s2.salary - s1.salary) IS NOT NULL;
+-- 存在问题，若一个员工有多条记录，输出结果无法整合
+select b.emp_no, (b.salary - a.salary) as growth
+from (select e.emp_no, s.salary
+      from employees e
+               left join salaries s
+                         on e.emp_no = s.emp_no
+                             and e.hire_date = s.from_date) a -- 入职工资表
+         inner join
+     (select e.emp_no, s.salary
+      from employees e
+               left join salaries s
+                         on e.emp_no = s.emp_no
+      where s.to_date = '9999-01-01') b -- 现在工资表
+     on a.emp_no = b.emp_no
+order by growth;
