@@ -90,3 +90,5 @@ from (select e.emp_no, s.salary
       where s.to_date = '9999-01-01') b -- 现在工资表
      on a.emp_no = b.emp_no
 order by growth;
+
+-- 
