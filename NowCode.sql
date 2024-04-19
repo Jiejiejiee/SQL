@@ -92,3 +92,20 @@ from (select e.emp_no, s.salary
 order by growth;
 
 -- 253
+-- Todo:left join 出现数据丢失的情况
+select e.emp_no,
+       e.first_name,
+       e.last_name,
+       btype,
+       salary,
+       case
+           when btype = 1 then salary * 0.1
+           when btype = 2 then salary * 0.2
+           else salary * 0.3 end as bonus
+from employees e
+         inner join emp_bonus
+                   on emp_bonus.emp_no = e.emp_no
+         inner join salaries
+                   on salaries.emp_no = e.emp_no
+where to_date = '9999-01-01'
+order by emp_no asc ;
