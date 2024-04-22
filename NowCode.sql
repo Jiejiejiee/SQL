@@ -146,6 +146,16 @@ where a.emp_no <> b.emp_no
   and a.salary > b.salary;
 
 
+-- 220
+select de.dept_no, d.dept_name, t.title, count(title)
+from dept_emp de
+         left join titles t
+                   on de.emp_no = t.emp_no
+         left join departments d
+                   on de.dept_no = d.dept_no
+group by de.dept_no, d.dept_name, t.title
+order by dept_no, title;
+
 -- 253
 -- Todo:left join 出现数据丢失的情况
 select e.emp_no,
