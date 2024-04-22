@@ -99,6 +99,52 @@ where e.emp_no not in (select emp_no from dept_manager);
 
 
 -- 219
+-- 三个表通过左连接无法查询manager的salary，需要再次左连接一张salaries查询manager的salary
+select de.emp_no as emp_no, dm.emp_no as manager_no, s1.salary as emp_salary, s2.salary as manager_salary
+from dept_emp de
+         left join salaries s1
+                   on de.emp_no = s1.emp_no
+                       and s1.to_date = '9999-01-01'
+                       and de.to_date = '9999-01-01'
+         left join dept_manager dm
+                   on de.dept_no = dm.dept_no
+                       and dm.to_date = '9999-01-01'
+         left join salaries s2
+                   on dm.emp_no = s2.emp_no
+                       and s2.to_date = '9999-01-01'
+where de.emp_no <> dm.emp_no
+  and s1.salary > s2.salary;
+
+-- 通过查询employee和Manager的工资，再将两张子表连接查询
+select *
+from dept_emp de
+         left join salaries s
+                   on de.emp_no = s.emp_no
+where s.to_date = '9999-01-01';
+
+select *
+from dept_manager dm
+         left join salaries s
+                   on dm.emp_no = s.emp_no
+where s.to_date = '9999-01-01';
+
+select a.emp_no as emp_no, b.emp_no as manager_no, a.salary as emp_salary, b.salary as manager_salary
+from (select de.emp_no, salary, dept_no
+      from dept_emp de
+               left join salaries s
+                         on de.emp_no = s.emp_no
+      where de.to_date = '9999-01-01'
+        and s.to_date = '9999-01-01') a
+         inner join (select dm.emp_no, salary, dept_no
+                     from dept_manager dm
+                              left join salaries s
+                                        on dm.emp_no = s.emp_no
+                     where dm.to_date = '9999-01-01'
+                       and s.to_date = '9999-01-01') b
+                    on a.dept_no = b.dept_no
+where a.emp_no <> b.emp_no
+  and a.salary > b.salary;
+
 
 -- 253
 -- Todo:left join 出现数据丢失的情况
@@ -113,8 +159,8 @@ select e.emp_no,
            else salary * 0.3 end as bonus
 from employees e
          inner join emp_bonus
-                   on emp_bonus.emp_no = e.emp_no
+                    on emp_bonus.emp_no = e.emp_no
          inner join salaries
-                   on salaries.emp_no = e.emp_no
+                    on salaries.emp_no = e.emp_no
 where to_date = '9999-01-01'
-order by emp_no asc ;
+order by emp_no;
