@@ -174,3 +174,15 @@ from employees e
                     on salaries.emp_no = e.emp_no
 where to_date = '9999-01-01'
 order by emp_no;
+
+-- 260
+-- 改写法会触发sql_mode=only_full_group_by报错，
+# select user_id, date
+# from login
+# group by user_id
+# order by date desc
+# limit 1;
+select user_id, max(date) as id
+from login
+group by user_id
+order by user_id;
